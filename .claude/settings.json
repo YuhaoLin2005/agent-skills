@@ -1,14 +1,148 @@
 {
-    "$schema": "https://json.schemastore.org/claude-code-settings.json",
-    "extraKnownMarketplaces": {
-        "ecc": {
-            "source": {
-                "source": "github",
-                "repo": "affaan-m/ECC"
-            }
-        }
-    },
-    "enabledPlugins": {
-        "ecc@ecc": true
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "cleanupPeriodDays": 60,
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-pro[1m]",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL_NAME": "deepseek-v4-pro",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-flash",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL_NAME": "deepseek-v4-pro",
+    "ANTHROPIC_MODEL": "deepseek-v4-pro[1m]",
+    "API_TIMEOUT_MS": "300000",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK": "1",
+    "DISABLE_COST_WARNINGS": "1",
+    "CLAUDE_CODE_EFFORT_LEVEL": "max",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "inherit",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "32000",
+    "MAX_MCP_OUTPUT_TOKENS": "25000",
+    "ENABLE_TOOL_SEARCH": "auto:5"
+  },
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(del /f /s C:*)"
+    ],
+    "allow": [
+      "Bash(cd *)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(grep *)",
+      "Bash(wc *)",
+      "Bash(which *)",
+      "Bash(echo *)",
+      "Bash(date *)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(pwd *)",
+      "Bash(export *)",
+      "Bash(source *)",
+      "Bash(du *)",
+      "Bash(df *)",
+      "Bash(set *)",
+      "Bash(mkdir *)",
+      "Bash(rm *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(chmod *)",
+      "Bash(sed *)",
+      "Bash(iconv *)",
+      "Bash(perl *)",
+      "Bash(unzip *)",
+      "Bash(curl *)",
+      "Bash(sc *)",
+      "Bash(reg *)",
+      "Bash(netstat *)",
+      "Bash(setx *)",
+      "Bash(winget *)",
+      "Bash(cmd.exe *)",
+      "Bash(powershell *)",
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(cargo *)",
+      "Bash(conda *)",
+      "Bash(pip *)",
+      "Bash(pip3 *)",
+      "Bash(node *)",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(rtk *)",
+      "Bash(uvx *)",
+      "Bash(where *)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" *)",
+      "Bash(\"/c/Program Files/PostgreSQL/17/bin/psql.exe\" *)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Agent(*)",
+      "Skill(*)",
+      "Task(*)",
+      "NotebookEdit(*)",
+      "Read(//c/**)",
+      "Read(//tmp/**)",
+      "mcp__filesystem__*",
+      "mcp__context7__*",
+      "mcp__playwright__*",
+      "mcp__github__*",
+      "mcp__duckduckgo__*",
+      "mcp__parallel-search__*",
+      "mcp__squish__*",
+      "mcp__tessl__*",
+      "Bash(nvidia-smi *)",
+      "Bash(wmic cpu *)",
+      "Bash(systeminfo)",
+      "Bash(wmic memorychip *)",
+      "Bash(wmic computersystem *)",
+      "Bash(gh search *)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "Bash(/c/Users/86131/AppData/Local/Programs/Python/Python312/python.exe *)",
+      "Bash(gh auth *)",
+      "Bash(rtk git *)"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "enabledMcpjsonServers": [
+    "filesystem",
+    "context7",
+    "parallel-search",
+    "playwright",
+    "github",
+    "duckduckgo",
+    "squish"
+  ],
+  "includeCoAuthoredBy": false,
+  "enableAllProjectMcpServers": false,
+  "statusLine": {
+    "type": "command",
+    "command": "C:/Users/86131/AppData/Local/Programs/Python/Python312/python.exe C:/Users/86131/.claude/scripts/statusline.py",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "commit-commands@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "ecc@ecc": true
+  },
+  "alwaysThinkingEnabled": true,
+  "autoCompactWindow": 120000,
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "autoCompactEnabled": true,
+  "fileCheckpointingEnabled": true,
+  "showTurnDuration": true,
+  "todoFeatureEnabled": true,
+  "extraKnownMarketplaces": {
+    "ecc": {
+      "source": {
+        "source": "github",
+        "repo": "affaan-m/ECC"
+      }
     }
+  }
 }
