@@ -160,7 +160,7 @@ See [standards/git/git-workflow-standards.md](standards/git/git-workflow-standar
 
 ## Current Version
 
-**Version:** v2.10.3 — [Full changelog](CHANGELOG.md)
+**Version:** v0.7.0 — Tier3 audit: 7 fixes deployed, 2d growth-logs absorbed — [Full changelog](CHANGELOG.md)
 
 ## Roadmap
 

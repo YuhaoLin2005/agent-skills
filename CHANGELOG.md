@@ -3,6 +3,9 @@
 > Version history for the Claude Code Skills repository.
 > Loaded on demand — operational config is in [CLAUDE.md](CLAUDE.md).
 
+## v2.10.3 (archived 2026-07-06)
+
+**Version:** v2.10.3 — [Full changelog](CHANGELOG.md)
 
 ## Current Version
 
