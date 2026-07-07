@@ -256,6 +256,24 @@
             "timeout": 30000
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/86131/AppData/Local/Programs/Python/Python312/python.exe C:/Users/86131/.claude/scripts/honesty-check.py",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/86131/AppData/Local/Programs/Python/Python312/python.exe C:/Users/86131/.claude/scripts/heartbeat.py",
+            "timeout": 5000
+          }
+        ]
       }
     ],
     "SubagentStop": [
