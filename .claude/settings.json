@@ -183,6 +183,16 @@
         ]
       },
       {
+        "matcher": "Write|Edit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/86131/AppData/Local/Programs/Python/Python312/python.exe C:/Users/86131/.claude/scripts/execution-gate.py",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
         "matcher": "Read|Bash|Edit|Write",
         "hooks": [
           {
@@ -199,6 +209,18 @@
             "type": "command",
             "command": "C:/Users/86131/AppData/Local/Programs/Python/Python312/python.exe C:/Users/86131/.claude/scripts/pre-agent-guard.py",
             "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/86131/AppData/Local/Programs/Python/Python312/python.exe C:/Users/86131/.claude/scripts/fact-check-hook.py",
+            "timeout": 15000
           }
         ]
       }
