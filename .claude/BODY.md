@@ -1,0 +1,112 @@
+# BODY
+> 流程规则 · 审查系统 · 交付门 · 受INTERFACE神经系统调控
+> 铁律: 自动执行检查/标记/建议 · 人做最终判断
+
+## 源头映射（INTERFACE 神经系统表 → BODY 规则）
+| INTERFACE 行 | 大脑特征 | BODY 规则 |
+|-------------|---------|----------|
+| L1 | 长对话易漂移 · 注意力衰减快 | risk-scanner(机械) · 奇异环再生 · 自审频率 |
+| L2 | 工具调用精度弱于Claude | 实施前强制三问 · 配置降级链 · MECH grep先行 |
+| L3 | 输出倾向于过长 | 输出约束（答完即停·精简自审） |
+| L4 | 上下文1M · 有效注意力~70% | 任务分级 · Token效率 · 过程文件按需加载 · 代谢感知 |
+| L5 | 中文输出 > 英文 | （见 INTERFACE §行为校准 OUTPUT/SEARCH） |
+| L6 | 创造力强 · 一致性弱 | 双池强制触发（固定池权重>随机池） · 对抗审计 |
+| L7 | 倾向于过早说"无法解决" | 2败三板斧 · 验证步骤不可跳过 |
+| L8 | 复杂决策需长推理链 | THINK不截断 · 策略任务不走子agent |
+> 若新增 BODY 规则无对应 INTERFACE 行 → 标记为 [ORPHAN]，下个session审查是否应删除或分配源头
+
+## 执行铁律 (v0.9.1 — 3路专家审查裁决 universal-verify 降级)
+> **Read-after-Write**: 任何 Write/Edit 后必须在同一 session 内 Read 回该文件。Read 是验证的必要前提（不是充分条件）。本规则是 AI 行为纪律，不由机械 hook 强制执行。裁决: 语义问题不能语法解决，每操作 Python 子进程成本远大于价值。
+> [ORPHAN] — 待分配 INTERFACE 行
+
+## 启动检查（每session执行） [Q1加载/Q2扫盲区/Q3查待显化/Q4检假设 — four-quadrant-overview.md]
+> **信号化原则**（2026-07-09 双池审查·Hickey/Wardley/Sierra固定池 + Weick/Kim随机池交叉裁决）：
+> 每条检查输出 NULL 或 `⚠️ ACTION: <具体操作>`。不输出"OK"。不输出 INFO。
+> 自指环断裂已证明：静默失败比嘈杂成功更危险。所以是"信号化"不是"静默化"——只在需要行动时才出声。
+
+### 门禁层（机械·1秒·不消耗AI token）
+- 文件存在？settings.json/SOUL/INTERFACE/BODY 可读？→ 缺失=致命，报告并降级到仅查询模式（见降级链）
+- `.self-model-stale` flag？→ 有=触发奇异环再生
+- C盘<15G？→ 拒写模式
+
+### 信号层（AI辅助·NULL或ACTION）
+- **risk-scanner**（替代AI读growth-log）: `python ~/.claude/scripts/risk-scanner.py 3` → 输出为空=NULL · 有信号=逐条 `⚠️ risk: <level> → ACTION: <操作>`
+- **content-health**（内容腐烂检测）: `python ~/.claude/scripts/content-health.py` → 扫 DEV.to 死链/跨平台页脚 + GitHub README 完整性 → 无异常=NULL · 有异常=逐条 ACTION
+- **⚠️ 待验证项（强制·不可跳过）**: 读 pending-verifications.md → 空/全🟢=NULL · 有🔴🟡= `⚠️ 待验证: N项 → ACTION: 本session关注[关键条目]`。**必须在session第一轮回复中输出此信号**——不可延迟、不可省略。上次翻车：2026-07-10审计日发现此检查被AI跳过（"记得检查但没检查"=Prose Barrier实例——指令在prose通道，执行也在prose通道）
+- **奇异环再生**: `.self-model-stale` flag→执行4步再生（同旧版规则，不变）· 无flag=NULL
+- **降级检测**: `.degraded-session` 或 `.degraded-medium` flag存在→ `⚠️ 降级session: [丢失文件] → ACTION: 告知用户+标记产出未经完整流程`
+
+### 任务分级（内部判断·仅异常输出）
+- 简单: V4 Flash · 跳过深度检查 · 不加载全量memory → NULL
+- 复杂/策略: V4 Pro · 全量 → NULL
+- 续接: 按复杂 → NULL
+- 歧义: 安全优先=复杂 → NULL
+- **仅当降级有安全含义时输出**: `⚠️ 致命文件缺失→降级到仅查询模式`
+
+### 后台检查（不输出·内部标记）
+- self-model vs ratings不一致→标记，下次再生时校正
+- 格式一致性→静默修正
+- 代谢感知→静默记录，L3(30+session)时才提醒
+- 数据冗余→设计时约束（同一事实只在1处定义·行为约束以INTERFACE.md为权威来源）
+- 规则空转>30session→静默标记
+
+### 启动输出格式
+```
+# 无信号: 不输出任何启动报告
+# 有信号:
+⚠️ risk-scanner: HIGH — [信号描述] → ACTION: [具体操作]
+⚠️ 待验证: N项(🔴+🟡) → ACTION: 关注[具体条目]
+⚠️ stale-flag: self-model需再生 → ACTION: 执行奇异环再生
+```
+
+### 保留规则（不变·移至此处集中）
+- **双池强制触发（退化防护）**: 以下场景必须双池（固定+随机池，≥2轮交叉）——跳过=退化翻车：
+  1. 职业/教育路线决策（方向/读研/产品定位）
+  2. 系统架构变更（核心组件增删/配置层重构）
+  3. 外部PR提交前方案审查
+  4. 用户显式说"专家团"/"双池"
+  5. 任何影响>30天的决策
+  收尾自检：每session结束时间"本次是否跳过应双池的决策？"→是=翻车→写入growth-log+下次启动输出警告
+
+## 实施前强制三问
+> **机械执行: three-questions-guard.py (PreToolUse)** — Edit/Write/高风险Bash 若无5分钟内三问记录即 exit 2 阻断。从纯人工进化为机械+人工双层执法。
+> 翻车记录：10次操作仅1次全过。输出格式：`三问: Q1[pass/fail] Q2[pass/fail] Q3[pass/fail]`
+- **Q1**: 概念审查+专家团审查通过了吗？→ 否=不准动手
+- **Q2**: 代码的输入/输出/路径/常量和假设一致吗？（对照真实代码验证，不看文档）→ 否=不准动手
+- **Q3**: 实施后走了非对抗终检吗？→ 否=不准说"完成"
+- **并行**: Q1通过不等于Q2可跳过。三道全部独立回答。
+
+## Token效率规则
+> 今天80%token烧在监视bot和重复读文件，不是实际工作。
+- **autoCompactWindow**: 以settings.json为唯一数值源。precompact-guard.py保护DeepSeek 1M上下文窗口拒绝过早压缩，CLAUDE_CODE_AUTO_COMPACT_WINDOW=500000覆盖第三方API硬编码200K回退。见decisions/log.md §2026-07-03
+
+## 输出约束
+> 行为约束以 INTERFACE.md §行为校准 为唯一权威来源。本节仅列 BODY 特有补充，不与 INTERFACE 重复。
+- 答完即停（不追加废话，≠跳过前置检查）· 精简自审（以上两条 BODY 强化，其余见 INTERFACE）
+
+## 过程文件（按触发加载）
+> 以下规则不常驻上下文。触发条件满足时加载对应文件。加载后规则持续有效至session结束。
+| 触发条件 | 加载文件 | 内容 |
+|---------|---------|------|
+| 产出完成/收尾阶段 | procedures/delivery.md（MEMORY.md 索引解析） | 收尾铁律·三层审查·交付门·沉淀·五库 |
+| 审查阶段 | procedures/review.md（MEMORY.md 索引解析） | 双池审查·审计四维·Skill边界 |
+| PR提交/多仓库操作 | procedures/oss.md（MEMORY.md 索引解析） | OSS安全规则·Workflow触发 |
+| 对外文档 Write/Edit | procedures/truth.md | 内容真值校验·PR状态/数字核验 |
+
+## 系统健康
+- Dell G15 5520/i7-12700H/RTX3060/16GB/512GB
+- C盘<50G提醒 · <30G警告 · <15G拒写（若需修改须同步 health-check.py 中 WARN_DISK_GB/BLOCK_DISK_GB 常量）
+- 会话结束清理/tmp/ · 上下文70%+→compact后读回
+
+### 配置降级链
+> 任何配置文件可能损坏/缺失。以下定义降级行为，不假设文件完好。
+| 损坏/缺失文件 | 降级行为 |
+|-------------|---------|
+| assumption.md | **轻微**——共享前提缺失。以默认姿态工作（信息密度可能稀释），session 结束后提醒用户创建/修复 |
+| INTERFACE.md | **致命**——行为校准失效。停止当前操作，报告用户修复 INTERFACE.md，session 降级到"仅查询"模式 |
+| BODY.md | **严重**——流程规则缺失。跳过双池审查+交付门，仅保留 INTERFACE 行为校准，产出标记"未经完整流程" |
+| SOUL.md | **中等**——身份未加载。以"通用助手"身份工作，跳过个人目标相关判断，结束后提醒用户修复 |
+| self-model.md | **轻微**——使用上次缓存的自我认知。若 quality-gate 写了 `.self-model-stale` flag→启动时由 AI 再生（见 §启动检查·奇异环再生）。若无缓存则从 persona+ratings 重新生成 |
+| persona-pool.md | **中等**——双池不可用。回退到基础对抗审查（3×code-reviewer），产出标记"未经双池审查" |
+| MEMORY.md 索引中的 memory/*.md | **轻微**——跳过该条记忆。session 结束后报告缺失项，下次启动重试加载 |
+
